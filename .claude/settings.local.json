@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && flutter analyze 2>&1 | head -50)",
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && flutter pub run build_runner build --delete-conflicting-outputs 2>&1 | tail -20)",
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && python3 -c \"\nimport os\nfiles = [\n    'lib/main.dart',\n    'lib/core/network/dio_client.dart',\n    'lib/core/supabase/supabase_config.dart',\n    'lib/core/router/router.dart',\n    'lib/features/home/presentation/pages/home_page.dart',\n]\nfor f in files:\n    with open\\(f, 'rb'\\) as fp:\n        raw = fp.read\\(4\\)\n    print\\(f'{f}: {raw[:4].hex\\(\\)}'\\)\n\")",
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && dart run build_runner build --delete-conflicting-outputs 2>&1)",
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && python3 -c \"\nimport os\n\nutf16_files = [\n    'test/core/network/dio_client_test.dart',\n    'android/production/sumpyo_app/main.dart',\n    'android/production/sumpyo_app/core/network/dio_client.dart',\n    'android/production/sumpyo_app/core/supabase/supabase_config.dart',\n]\nutf8bom_files = [\n    'android/production/sumpyo_app/core/router/router.dart',\n    'android/production/sumpyo_app/features/home/presentation/pages/home_page.dart',\n]\n\nfor f in utf16_files:\n    with open\\(f, 'rb'\\) as fp:\n        raw = fp.read\\(\\)\n    content = raw.decode\\('utf-16-le'\\).lstrip\\('\\\\ufeff'\\)\n    with open\\(f, 'w', encoding='utf-8', newline='\\\\n'\\) as fp:\n        fp.write\\(content\\)\n    print\\(f'Converted UTF-16->UTF-8: {f}'\\)\n\nfor f in utf8bom_files:\n    with open\\(f, 'rb'\\) as fp:\n        raw = fp.read\\(\\)\n    content = raw.decode\\('utf-8-sig'\\)\n    with open\\(f, 'w', encoding='utf-8', newline='\\\\n'\\) as fp:\n        fp.write\\(content\\)\n    print\\(f'BOM removed: {f}'\\)\n\")",
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && flutter analyze 2>&1)",
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && flutter test 2>&1)",
+      "Bash(cat >> \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\\\\doc\\\\COMMON_MISTAKES.md\" << 'EOF'\n\n### 2026-03-11: Flutter UTF-16 인코딩 및 숨겨진 복사본 파일\n\n- **실수**: Windows 환경에서 Dart 파일이 UTF-16 LE BOM으로 저장됨. Dart 컴파일러는 UTF-8만 지원.\n- **결과**: `build_runner`가 `FormatException: Invalid UTF-8 byte` 에러로 무한 대기 상태에 빠짐.\n- **함정**: `lib/` 디렉토리의 파일만 확인했으나, `android/production/`, `android/test/`, `test/` 등 하위 디렉토리에도 UTF-16 복사본이 존재했음. 일부만 수정하면 build_runner가 여전히 막힘.\n- **방지**:\n    1. 프로젝트 전체를 대상으로 인코딩을 일괄 검사하라 \\(python3로 BOM 바이트 확인\\).\n    2. `android/` 내부의 Dart 파일은 `analysis_options.yaml`의 `exclude`로 분석 대상에서 제외하라.\n    3. riverpod_annotation v2.x에서 생성된 `XyzRef` typedef가 deprecated일 경우, `// ignore: deprecated_member_use_from_same_package`로 처리하라.\nEOF)",
+      "Bash(cat >> \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\\\\doc\\\\LESSONS_LEARNED.md\" << 'EOF'\n\n### 2026-03-11: Flutter 빌드 에러 수정 — UTF-16 인코딩 & build_runner 교훈\n\n- **핵심 규칙**: Flutter 프로젝트에서 build_runner가 특정 파일에서 멈출 때, 해당 파일의 **인코딩**을 가장 먼저 의심하라. `lib/`만이 아닌 프로젝트 전체 Dart 파일을 검사해야 한다.\n- **작동한 것**: Python으로 프로젝트 전체 `.dart` 파일을 순회하며 UTF-16 BOM\\(`FF FE`\\)을 감지하고 UTF-8로 일괄 변환.\n- **실패한 것**: `lib/`만 변환 → `test/core/network/dio_client_test.dart`가 누락되어 build_runner가 계속 무한 대기.\n- **분석 제외 처리**: `android/production/`처럼 분석 대상이 아닌 경로는 `analysis_options.yaml`의 `analyzer.exclude`에 추가하라.\nEOF)",
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && flutter --version 2>&1 | head -5)",
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && flutter pub outdated fl_chart 2>&1 | head -20)",
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && flutter pub get 2>&1)",
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && flutter pub add fl_chart --dry-run 2>&1)",
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && flutter build apk --debug 2>&1 | head -80)",
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && flutter build apk --debug 2>&1 | tail -30)",
+      "Bash(cd \"C:\\\\Users\\\\tuosm\\\\.gemini\\\\antigravity\\\\scratch\\\\sumpyo-flutter-app\" && flutter build apk --debug 2>&1)",
+      "Bash(taskkill /F /IM sumpyo_app.exe 2>&1; taskkill /F /IM flutter_tester.exe 2>&1; echo \"Done\")",
+      "Bash(taskkill //F //IM sumpyo_app.exe 2>&1 || echo \"프로세스 없음\")",
+      "Bash(tasklist | grep -i \"flutter\\\\|dart\\\\|sumpyo\" 2>&1 || echo \"관련 프로세스 없음\")",
+      "Bash(taskkill //F //IM dart.exe 2>&1; echo \"종료 완료\")",
+      "Bash(cd \"C:/Users/tuosm/.gemini/antigravity/scratch/sumpyo-flutter-app\" && flutter run -d windows 2>&1)",
+      "Bash(cd \"C:/Users/tuosm/.gemini/antigravity/scratch/sumpyo-flutter-app\" && flutter clean 2>&1)",
+      "Bash(powershell -Command \"Get-Process | Where-Object { $_.MainWindowTitle -like '*sumpyo*' -or $_.Name -like '*sumpyo*' } | Select-Object Id, Name, MainWindowTitle\" 2>&1)",
+      "Bash(powershell -Command \"Get-Process sumpyo_app -ErrorAction SilentlyContinue | Select-Object Id, Name\" 2>&1)",
+      "Bash(wmic process:*)"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"powershell -Command \\\"Get-Process sumpyo_app -ErrorAction SilentlyContinue | Select-Object Id, Name\\\" 2>&1\",\"description\":\"sumpyo_app.exe 프로세스 직접 검색\"}",
+  "error": "Exit code 1",
+  "timestamp": "2026-03-11T10:03:35.180Z",
+  "retry_count": 1
+}

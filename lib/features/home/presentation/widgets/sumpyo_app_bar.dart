@@ -1,4 +1,4 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/sumpyo_colors.dart';
 
@@ -16,7 +16,7 @@ class SumpyoAppBar extends StatelessWidget {
       elevation: 0,
       scrolledUnderElevation: 0,
       backgroundColor: Colors.transparent,
-      toolbarHeight: 120,
+      toolbarHeight: 100,
       flexibleSpace: Stack(
         children: [
           ShaderMask(
@@ -62,28 +62,25 @@ class SumpyoAppBar extends StatelessWidget {
           ),
         ],
       ),
-      title: Padding(
-        padding: const EdgeInsets.only(top: 50),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(
-              'assets/sumpyo_ai_icon.png',
-              height: 24,
+      title: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            'assets/sumpyo_ai_icon.png',
+            height: 24,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'SUMPYO',
+            style: TextStyle(
+              fontFamily: 'Pretendard',
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 2.5,
+              color: isDark ? Colors.white : SumpyoColors.softCharcoal,
             ),
-            const SizedBox(width: 8),
-            Text(
-              'SUMPYO',
-              style: TextStyle(
-                fontFamily: 'Pretendard',
-                fontSize: 14,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 2.5,
-                color: isDark ? Colors.white : SumpyoColors.softCharcoal,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
       centerTitle: true,
     );

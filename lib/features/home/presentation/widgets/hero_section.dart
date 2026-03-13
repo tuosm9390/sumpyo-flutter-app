@@ -1,16 +1,22 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/sumpyo_colors.dart';
 import '../../../../core/utils/greeting_utils.dart';
+import '../../../../core/network/sun_time_service.dart';
 
-class HeroSection extends StatelessWidget {
+class HeroSection extends ConsumerWidget {
   const HeroSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    
+    // 일출/일몰 데이터 구독
+    final sunTimeAsync = ref.watch(sunTimeNotifierProvider);
+    final sunData = sunTimeAsync.valueOrNull;
 
     return SliverToBoxAdapter(
       child: Padding(
@@ -27,7 +33,10 @@ class HeroSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        GreetingUtils.getGreeting(),
+                        GreetingUtils.getGreeting(
+                          sunrise: sunData?.sunrise,
+                          sunset: sunData?.sunset,
+                        ),
                         style: GoogleFonts.gowunBatang(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -41,7 +50,10 @@ class HeroSection extends StatelessWidget {
                           .slideY(begin: 0.1, end: 0),
                       const SizedBox(height: 12),
                       Text(
-                        GreetingUtils.getSubGreeting(),
+                        GreetingUtils.getSubGreeting(
+                          sunrise: sunData?.sunrise,
+                          sunset: sunData?.sunset,
+                        ),
                         style: const TextStyle(
                           fontFamily: 'Pretendard',
                           fontSize: 14,

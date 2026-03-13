@@ -1,6 +1,6 @@
 package com.sumpyo.sumpyo_app
 
-private val embedding: Any
-    get() {
-        TODO()
-    }
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}

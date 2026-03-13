@@ -32,7 +32,7 @@ class WellnessState {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class WellnessNotifier extends _$WellnessNotifier {
   static final List<WellnessMission> _missionPool = [
     WellnessMission(
@@ -152,9 +152,8 @@ class WellnessNotifier extends _$WellnessNotifier {
   ];
 
   @override
-  WellnessState build() {
-    _loadData();
-    return const WellnessState(missions: []);
+  FutureOr<WellnessState> build() async {
+    return _loadData();
   }
 
   DateTime getLogicalToday() {
@@ -171,7 +170,7 @@ class WellnessNotifier extends _$WellnessNotifier {
     return File('${directory.path}/wellness_data_v2.json');
   }
 
-  Future<void> _loadData() async {
+  Future<WellnessState> _loadData() async {
     try {
       final file = await _getLocalFile();
       if (await file.exists()) {
@@ -200,26 +199,24 @@ class WellnessNotifier extends _$WellnessNotifier {
 
             // 날짜가 바뀌었는지 확인
             if (_formatDate(firstMissionDate) != todayStr) {
-              _generateDailyMissions(historyDates);
-              return;
+              return _generateDailyMissions(historyDates, save: false);
             }
 
-            state = WellnessState(
+            return WellnessState(
               missions: loadedMissions,
               completedHistoryDates: historyDates,
               hasNewArrival: lastNotifiedDate != todayStr,
             );
-            return;
           }
         }
       }
-      _generateDailyMissions({});
+      return _generateDailyMissions({}, save: true);
     } catch (e) {
-      _generateDailyMissions({});
+      return _generateDailyMissions({}, save: true);
     }
   }
 
-  void _generateDailyMissions(Set<String> history) {
+  WellnessState _generateDailyMissions(Set<String> history, {required bool save}) {
     final logicalToday = getLogicalToday();
     final seed =
         logicalToday.year * 10000 + logicalToday.month * 100 + logicalToday.day;
@@ -240,24 +237,30 @@ class WellnessNotifier extends _$WellnessNotifier {
       );
     }).toList();
 
-    state = WellnessState(
+    final newState = WellnessState(
       missions: selectedMissions,
       completedHistoryDates: history,
       hasNewArrival: true,
     );
-    _saveData();
+    
+    if (save) {
+      // 비동기로 저장 (현재 빌드 중이 아님을 보장할 수 있는 위치에서 호출 필요)
+      Future.microtask(() => _saveStateData(newState));
+    }
+    
+    return newState;
   }
 
-  Future<void> _saveData() async {
+  Future<void> _saveStateData(WellnessState targetState) async {
     try {
       final file = await _getLocalFile();
       final logicalToday = getLogicalToday();
       final todayStr = _formatDate(logicalToday);
 
       final Map<String, dynamic> data = {
-        'missions': state.missions.map((m) => m.toJson()).toList(),
-        'history': state.completedHistoryDates.toList(),
-        'lastNotifiedDate': state.hasNewArrival ? '' : todayStr,
+        'missions': targetState.missions.map((m) => m.toJson()).toList(),
+        'history': targetState.completedHistoryDates.toList(),
+        'lastNotifiedDate': targetState.hasNewArrival ? '' : todayStr,
       };
       await file.writeAsString(json.encode(data));
     } catch (e) {
@@ -266,13 +269,18 @@ class WellnessNotifier extends _$WellnessNotifier {
   }
 
   void markAsNotified() {
-    state = state.copyWith(hasNewArrival: false);
-    _saveData();
+    if (state.hasValue) {
+      state = AsyncValue.data(state.value!.copyWith(hasNewArrival: false));
+      _saveStateData(state.value!);
+    }
   }
 
   void toggleMission(String id) {
+    if (!state.hasValue) return;
+    
+    final currentState = state.value!;
     final updatedMissions = [
-      for (final mission in state.missions)
+      for (final mission in currentState.missions)
         if (mission.id == id)
           mission.copyWith(isCompleted: !mission.isCompleted)
         else
@@ -282,17 +290,19 @@ class WellnessNotifier extends _$WellnessNotifier {
     final isAnyCompleted = updatedMissions.any((m) => m.isCompleted);
     final todayStr = _formatDate(getLogicalToday());
 
-    final newHistory = Set<String>.from(state.completedHistoryDates);
+    final newHistory = Set<String>.from(currentState.completedHistoryDates);
     if (isAnyCompleted) {
       newHistory.add(todayStr);
     } else {
       newHistory.remove(todayStr);
     }
 
-    state = state.copyWith(
+    final newState = currentState.copyWith(
       missions: updatedMissions,
       completedHistoryDates: newHistory,
     );
-    _saveData();
+    
+    state = AsyncValue.data(newState);
+    _saveStateData(newState);
   }
 }

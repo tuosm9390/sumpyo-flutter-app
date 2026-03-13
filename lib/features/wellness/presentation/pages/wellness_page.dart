@@ -89,62 +89,72 @@ class WellnessPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wellnessState = ref.watch(wellnessNotifierProvider);
-    final missions = wellnessState.missions;
 
-    ref.listen(wellnessNotifierProvider.select((s) => s.hasNewArrival), (prev, next) {
-      if (next) {
+    ref.listen(wellnessNotifierProvider, (prev, next) {
+      if (next.hasValue && next.value!.hasNewArrival) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _showNewArrivalDialog(context, ref);
         });
       }
     });
 
-    final WellnessMission uncompletedMission = missions.isEmpty
-        ? WellnessMission(
-            id: '0',
-            title: '미션이 없습니다',
-            description: '',
-            category: '',
-            date: DateTime.now())
-        : missions.firstWhere(
-            (m) => !m.isCompleted,
-            orElse: () => missions.first,
-          );
-
     return Scaffold(
       backgroundColor: SumpyoColors.warmWhite,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          const SumpyoAppBar(),
-          SliverToBoxAdapter(
-            child: _MissionHero(mission: uncompletedMission),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 32),
-            sliver: SliverToBoxAdapter(
-              child: _WeeklyProgress(
-                completedHistory: wellnessState.completedHistoryDates,
+      body: wellnessState.when(
+        data: (state) {
+          final missions = state.missions;
+          final uncompletedMission = missions.isEmpty
+              ? WellnessMission(
+                  id: '0',
+                  title: '미션이 없습니다',
+                  description: '',
+                  category: '',
+                  date: DateTime.now())
+              : missions.firstWhere(
+                  (m) => !m.isCompleted,
+                  orElse: () => missions.first,
+                );
+
+          return CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              const SumpyoAppBar(),
+              SliverToBoxAdapter(
+                child: _MissionHero(mission: uncompletedMission),
               ),
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final mission = missions[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: _MissionItem(mission: mission),
-                  );
-                },
-                childCount: missions.length,
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(vertical: 32),
+                sliver: SliverToBoxAdapter(
+                  child: _WeeklyProgress(
+                    completedHistory: state.completedHistoryDates,
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SliverPadding(padding: EdgeInsets.only(bottom: 40)),
-        ],
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final mission = missions[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: _MissionItem(mission: mission),
+                      );
+                    },
+                    childCount: missions.length,
+                  ),
+                ),
+              ),
+              const SliverPadding(padding: EdgeInsets.only(bottom: 40)),
+            ],
+          );
+        },
+        loading: () => const Center(
+          child: CircularProgressIndicator(color: SumpyoColors.sageGreen),
+        ),
+        error: (err, stack) => Center(
+          child: Text('데이터를 불러오지 못했습니다: $err'),
+        ),
       ),
     );
   }
@@ -156,15 +166,21 @@ class _MissionHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = SumpyoColors.sageGreen.withValues(alpha: 0.15);
+    
     return Container(
       width: double.infinity,
-      height: 340,
+      height: 300,
       decoration: BoxDecoration(
-        color: SumpyoColors.sageGreen.withValues(alpha: 0.15),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(48),
-          bottomRight: Radius.circular(48),
-        ),
+        color: color,
+        borderRadius: BorderRadius.circular(48),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.1),
+            blurRadius: 40,
+            spreadRadius: 10,
+          ),
+        ],
       ),
       child: Stack(
         alignment: Alignment.center,
@@ -229,6 +245,9 @@ class _WeeklyProgress extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final wellnessState = ref.watch(wellnessNotifierProvider);
+    if (!wellnessState.hasValue) return const SizedBox.shrink();
+
     final notifier = ref.read(wellnessNotifierProvider.notifier);
     final logicalToday = notifier.getLogicalToday();
     
@@ -312,70 +331,68 @@ class _MissionItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final logicalToday = ref.read(wellnessNotifierProvider.notifier).getLogicalToday();
-    final isToday = mission.date.year == logicalToday.year && 
-                    mission.date.month == logicalToday.month && 
-                    mission.date.day == logicalToday.day;
+    final wellnessState = ref.read(wellnessNotifierProvider);
+    if (!wellnessState.hasValue) return const SizedBox.shrink();
+    
+    // 리스트에 표시되는 모든 미션은 클릭 가능하도록 수정 (isToday 체크 제거)
+    // Provider 레벨에서 이미 오늘 날짜 미션만 리스트에 넣어주기 때문입니다.
 
     return SumpyoCard(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-      onTap: isToday ? () =>
-          ref.read(wellnessNotifierProvider.notifier).toggleMission(mission.id) : null,
-      child: Opacity(
-        opacity: isToday ? 1.0 : 0.5,
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    StringUtils.keepAll(mission.title),
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: mission.isCompleted
-                          ? SumpyoColors.softCharcoal.withValues(alpha: 0.4)
-                          : SumpyoColors.softCharcoal,
-                      decoration:
-                          mission.isCompleted ? TextDecoration.lineThrough : null,
-                    ),
+      onTap: () =>
+          ref.read(wellnessNotifierProvider.notifier).toggleMission(mission.id),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  StringUtils.keepAll(mission.title),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: mission.isCompleted
+                        ? SumpyoColors.softCharcoal.withValues(alpha: 0.4)
+                        : SumpyoColors.softCharcoal,
+                    decoration:
+                        mission.isCompleted ? TextDecoration.lineThrough : null,
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    StringUtils.keepAll(mission.description),
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: SumpyoColors.softCharcoal.withValues(alpha: 0.5),
-                      height: 1.4,
-                    ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  StringUtils.keepAll(mission.description),
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: SumpyoColors.softCharcoal.withValues(alpha: 0.5),
+                    height: 1.4,
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-            Animate(
-              target: mission.isCompleted ? 1 : 0,
-              effects: [
-                ScaleEffect(
-                    begin: const Offset(1, 1),
-                    end: const Offset(1.15, 1.15),
-                    curve: Curves.elasticOut,
-                    duration: 500.ms),
-                FadeEffect(begin: 0.6, end: 1.0, duration: 300.ms),
+                ),
               ],
-              child: Icon(
-                mission.isCompleted
-                    ? Icons.check_circle_rounded
-                    : Icons.radio_button_unchecked_rounded,
-                color: mission.isCompleted
-                    ? SumpyoColors.sageGreen
-                    : SumpyoColors.paperBorder,
-                size: 30,
-              ),
             ),
-          ],
-        ),
+          ),
+          const SizedBox(width: 12),
+          Animate(
+            target: mission.isCompleted ? 1 : 0,
+            effects: [
+              ScaleEffect(
+                  begin: const Offset(1, 1),
+                  end: const Offset(1.15, 1.15),
+                  curve: Curves.elasticOut,
+                  duration: 500.ms),
+              FadeEffect(begin: 0.6, end: 1.0, duration: 300.ms),
+            ],
+            child: Icon(
+              mission.isCompleted
+                  ? Icons.check_circle_rounded
+                  : Icons.radio_button_unchecked_rounded,
+              color: mission.isCompleted
+                  ? SumpyoColors.sageGreen
+                  : SumpyoColors.paperBorder,
+              size: 30,
+            ),
+          ),
+        ],
       ),
     );
   }

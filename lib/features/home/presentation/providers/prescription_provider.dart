@@ -1,10 +1,10 @@
-import "package:riverpod_annotation/riverpod_annotation.dart";
+﻿import "package:riverpod_annotation/riverpod_annotation.dart";
 import "../../domain/entities/prescription.dart";
 import "../../data/providers/data_providers.dart";
 
 part "prescription_provider.g.dart";
 
-@riverpod
+@Riverpod(keepAlive: true)
 class PrescriptionNotifier extends _$PrescriptionNotifier {
   @override
   FutureOr<List<Prescription>> build() async {

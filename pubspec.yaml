@@ -1,10 +1,11 @@
-name: sumpyo_app
+﻿name: sumpyo_app
 description: "A new Flutter project."
 publish_to: "none"
 version: 1.0.0+1
 environment:
   sdk: ^3.6.2
 dependencies:
+  geolocator: ^13.0.1
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
@@ -26,6 +27,7 @@ dependencies:
   share_plus: ^12.0.1
   shared_preferences: ^2.5.3
 dev_dependencies:
+  geolocator: ^13.0.1
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
@@ -43,4 +45,5 @@ flutter:
   assets:
     - .env
     - assets/
+
 

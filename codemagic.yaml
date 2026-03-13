@@ -1,0 +1,126 @@
+workflows:
+  ios-testflight:
+    name: iOS TestFlight 배포
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      groups:
+        - app_store_credentials  # Codemagic 대시보드에서 설정
+      vars:
+        BUNDLE_ID: "com.sumpyo.sumpyoapp"  # ⚠️ 실제 Bundle ID로 변경 필요
+        APP_STORE_APPLE_ID: Encrypted(...)  # Codemagic 대시보드에서 암호화하여 입력
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.sumpyo.sumpyoapp  # ⚠️ 실제 Bundle ID로 변경 필요
+
+    cache:
+      cache_paths:
+        - $HOME/.pub-cache
+
+    scripts:
+      - name: 환경변수 파일 생성
+        script: |
+          cat > .env << EOF
+          SUPABASE_URL=$SUPABASE_URL
+          SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY
+          GEMINI_API_KEY=$GEMINI_API_KEY
+          EOF
+
+      - name: 의존성 설치
+        script: flutter pub get
+
+      - name: iOS 코드 서명 설정
+        script: |
+          xcode-project use-profiles
+
+      - name: Flutter iOS 빌드
+        script: |
+          flutter build ipa \
+            --release \
+            --export-options-plist=/Users/builder/export_options.plist
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - 내부 테스터  # App Store Connect 테스터 그룹 이름
+      email:
+        recipients:
+          - $CM_BUILD_USER_EMAIL
+        notify:
+          success: true
+          failure: true
+
+  # ---------------------------------------------------
+  # 안드로이드 내부 테스트 트랙 워크플로우 (선택사항)
+  # ---------------------------------------------------
+  android-internal:
+    name: Android 내부 테스트 배포
+    max_build_duration: 30
+    instance_type: linux_x2
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+
+    environment:
+      flutter: stable
+      android_signing:
+        - sumpyo_keystore  # Codemagic 대시보드에서 설정
+      groups:
+        - google_play_credentials  # Codemagic 대시보드에서 설정
+
+    cache:
+      cache_paths:
+        - $HOME/.pub-cache
+
+    scripts:
+      - name: 환경변수 파일 생성
+        script: |
+          cat > .env << EOF
+          SUPABASE_URL=$SUPABASE_URL
+          SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY
+          GEMINI_API_KEY=$GEMINI_API_KEY
+          EOF
+
+      - name: 의존성 설치
+        script: flutter pub get
+
+      - name: Flutter Android 빌드
+        script: |
+          flutter build appbundle --release
+
+    artifacts:
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/mapping.txt
+
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+      email:
+        recipients:
+          - $CM_BUILD_USER_EMAIL
+        notify:
+          success: true
+          failure: true

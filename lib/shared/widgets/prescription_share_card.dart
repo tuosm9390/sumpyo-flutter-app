@@ -79,4 +79,3 @@ class PrescriptionShareCard extends StatelessWidget {
     }).join(' ');
   }
 }
-

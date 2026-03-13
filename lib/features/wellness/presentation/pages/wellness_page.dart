@@ -16,9 +16,14 @@ class WellnessPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final missions = ref.watch(wellnessNotifierProvider);
-    
-    final WellnessMission uncompletedMission = missions.isEmpty 
-        ? WellnessMission(id: '0', title: '미션이 없습니다', description: '', category: '', date: DateTime.now())
+
+    final WellnessMission uncompletedMission = missions.isEmpty
+        ? WellnessMission(
+            id: '0',
+            title: '미션이 없습니다',
+            description: '',
+            category: '',
+            date: DateTime.now())
         : missions.firstWhere(
             (m) => !m.isCompleted,
             orElse: () => missions.first,
@@ -157,7 +162,9 @@ class _WeeklyProgress extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: last7Days.map((date) {
-            final isToday = date.year == now.year && date.month == now.month && date.day == now.day;
+            final isToday = date.year == now.year &&
+                date.month == now.month &&
+                date.day == now.day;
             final hasCompleted = missions.any((m) {
               final mDate = DateTime(m.date.year, m.date.month, m.date.day);
               return m.isCompleted && mDate.isAtSameMomentAs(date);
@@ -172,19 +179,22 @@ class _WeeklyProgress extends StatelessWidget {
                     height: 16,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: hasCompleted 
-                          ? SumpyoColors.sageGreen 
+                      color: hasCompleted
+                          ? SumpyoColors.sageGreen
                           : SumpyoColors.paperBorder.withValues(alpha: 0.5),
-                      border: isToday 
+                      border: isToday
                           ? Border.all(color: SumpyoColors.sageGreen, width: 2)
                           : null,
-                      boxShadow: hasCompleted ? [
-                        BoxShadow(
-                          color: SumpyoColors.sageGreen.withValues(alpha: 0.3),
-                          blurRadius: 4,
-                          spreadRadius: 1,
-                        )
-                      ] : null,
+                      boxShadow: hasCompleted
+                          ? [
+                              BoxShadow(
+                                color: SumpyoColors.sageGreen
+                                    .withValues(alpha: 0.3),
+                                blurRadius: 4,
+                                spreadRadius: 1,
+                              )
+                            ]
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -192,7 +202,9 @@ class _WeeklyProgress extends StatelessWidget {
                     isToday ? '오늘' : '${date.day}',
                     style: TextStyle(
                       fontSize: 11,
-                      color: isToday ? SumpyoColors.sageGreen : SumpyoColors.softCharcoal.withValues(alpha: 0.4),
+                      color: isToday
+                          ? SumpyoColors.sageGreen
+                          : SumpyoColors.softCharcoal.withValues(alpha: 0.4),
                       fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
@@ -214,7 +226,8 @@ class _MissionItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SumpyoCard(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-      onTap: () => ref.read(wellnessNotifierProvider.notifier).toggleMission(mission.id),
+      onTap: () =>
+          ref.read(wellnessNotifierProvider.notifier).toggleMission(mission.id),
       child: Row(
         children: [
           Expanded(
@@ -226,10 +239,11 @@ class _MissionItem extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: mission.isCompleted 
-                        ? SumpyoColors.softCharcoal.withValues(alpha: 0.4) 
+                    color: mission.isCompleted
+                        ? SumpyoColors.softCharcoal.withValues(alpha: 0.4)
                         : SumpyoColors.softCharcoal,
-                    decoration: mission.isCompleted ? TextDecoration.lineThrough : null,
+                    decoration:
+                        mission.isCompleted ? TextDecoration.lineThrough : null,
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -249,16 +263,19 @@ class _MissionItem extends ConsumerWidget {
             target: mission.isCompleted ? 1 : 0,
             effects: [
               ScaleEffect(
-                begin: const Offset(1, 1), 
-                end: const Offset(1.15, 1.15), 
-                curve: Curves.elasticOut, 
-                duration: 500.ms
-              ),
+                  begin: const Offset(1, 1),
+                  end: const Offset(1.15, 1.15),
+                  curve: Curves.elasticOut,
+                  duration: 500.ms),
               FadeEffect(begin: 0.6, end: 1.0, duration: 300.ms),
             ],
             child: Icon(
-              mission.isCompleted ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
-              color: mission.isCompleted ? SumpyoColors.sageGreen : SumpyoColors.paperBorder,
+              mission.isCompleted
+                  ? Icons.check_circle_rounded
+                  : Icons.radio_button_unchecked_rounded,
+              color: mission.isCompleted
+                  ? SumpyoColors.sageGreen
+                  : SumpyoColors.paperBorder,
               size: 30,
             ),
           ),

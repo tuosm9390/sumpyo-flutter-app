@@ -43,14 +43,16 @@ class _HomePageState extends ConsumerState<HomePage> {
             const SumpyoAppBar(),
             const HeroSection(),
             SliverPadding(
-              padding: const EdgeInsets.only(left: 24, right: 24, top: 10, bottom: 24),
+              padding: const EdgeInsets.only(
+                  left: 24, right: 24, top: 10, bottom: 24),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   Container(
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
+                          color: Colors.black
+                              .withValues(alpha: isDark ? 0.2 : 0.05),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -62,7 +64,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                       decoration: InputDecoration(
                         hintText: StringUtils.keepAll('당신의 오늘 하루를 알려주세요'),
                         filled: true,
-                        fillColor: isDark ? const Color(0xFF383838) : Colors.white,
+                        fillColor:
+                            isDark ? const Color(0xFF383838) : Colors.white,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
@@ -73,13 +76,17 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: const BorderSide(color: SumpyoColors.sageGreen, width: 2),
+                          borderSide: const BorderSide(
+                              color: SumpyoColors.sageGreen, width: 2),
                         ),
                         contentPadding: const EdgeInsets.all(20),
                       ),
                       maxLines: 6,
                     ),
-                  ).animate().fadeIn(delay: 600.ms, duration: 600.ms).slideY(begin: 0.1, end: 0),
+                  )
+                      .animate()
+                      .fadeIn(delay: 600.ms, duration: 600.ms)
+                      .slideY(begin: 0.1, end: 0),
                   const SizedBox(height: 32),
                   Text(
                     StringUtils.keepAll('어떤 처방을 원하시나요?'),
@@ -94,19 +101,26 @@ class _HomePageState extends ConsumerState<HomePage> {
                       const SizedBox(width: 12),
                       Expanded(child: _styleButton(context, '온기형', 'W')),
                     ],
-                  ).animate().fadeIn(delay: 1000.ms, duration: 600.ms).slideY(begin: 0.1, end: 0),
+                  )
+                      .animate()
+                      .fadeIn(delay: 1000.ms, duration: 600.ms)
+                      .slideY(begin: 0.1, end: 0),
                   const SizedBox(height: 16),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Center(
                       child: Text(
                         _selectedStyle == 'F'
-                            ? StringUtils.keepAll('당신의 감정에 깊이 공감하며 마음을 어루만져 드립니다.')
+                            ? StringUtils.keepAll(
+                                '당신의 감정에 깊이 공감하며 마음을 어루만져 드립니다.')
                             : _selectedStyle == 'T'
-                                ? StringUtils.keepAll('차분하고 논리적인 분석으로 문제 해결의 실마리를 찾습니다.')
-                                : StringUtils.keepAll('따뜻한 햇살처럼 포근하고 다정한 위로를 전합니다.'),
+                                ? StringUtils.keepAll(
+                                    '차분하고 논리적인 분석으로 문제 해결의 실마리를 찾습니다.')
+                                : StringUtils.keepAll(
+                                    '따뜻한 햇살처럼 포근하고 다정한 위로를 전합니다.'),
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                           height: 1.5,
                         ),
                         textAlign: TextAlign.center,
@@ -125,24 +139,30 @@ class _HomePageState extends ConsumerState<HomePage> {
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(StringUtils.keepAll('처방전을 조제 중입니다. 잠시만 기다려주세요!')),
+                            content: Text(StringUtils.keepAll(
+                                '처방전을 조제 중입니다. 잠시만 기다려주세요!')),
                             backgroundColor: SumpyoColors.sageGreen,
                             behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
                             duration: const Duration(seconds: 3),
                           ),
                         );
 
-                        final prescription = await ref.read(prescriptionNotifierProvider.notifier).generatePrescription(
-                          prompt,
-                          style,
-                        );
+                        final prescription = await ref
+                            .read(prescriptionNotifierProvider.notifier)
+                            .generatePrescription(
+                              prompt,
+                              style,
+                            );
 
-                        if (prescription != null && mounted) {
+                        if (!context.mounted) return;
+                        if (prescription != null) {
                           showDialog(
                             context: context,
                             barrierDismissible: true,
-                            builder: (context) => PrescriptionCompletionDialog(prescription: prescription),
+                            builder: (context) => PrescriptionCompletionDialog(
+                                prescription: prescription),
                           );
                         }
                       }
@@ -176,16 +196,28 @@ class _HomePageState extends ConsumerState<HomePage> {
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
           color: isSelected
-            ? SumpyoColors.sageGreen
-            : (isDark ? const Color(0xFF383838) : Colors.white),
+              ? SumpyoColors.sageGreen
+              : (isDark ? const Color(0xFF383838) : Colors.white),
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: isSelected ? SumpyoColors.sageGreen : SumpyoColors.sageGreen.withValues(alpha: 0.1),
+            color: isSelected
+                ? SumpyoColors.sageGreen
+                : SumpyoColors.sageGreen.withValues(alpha: 0.1),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected
-              ? [BoxShadow(color: SumpyoColors.sageGreen.withValues(alpha: 0.2), blurRadius: 12, offset: const Offset(0, 6))]
-              : [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 8, offset: const Offset(0, 4))],
+              ? [
+                  BoxShadow(
+                      color: SumpyoColors.sageGreen.withValues(alpha: 0.2),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6))
+                ]
+              : [
+                  BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.02),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4))
+                ],
         ),
         alignment: Alignment.center,
         child: Text(
@@ -199,4 +231,3 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 }
-

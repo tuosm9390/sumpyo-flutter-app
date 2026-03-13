@@ -55,8 +55,8 @@ class EmotionChartWidget extends StatelessWidget {
             StringUtils.keepAll('나의 마음 처방 통계'),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: SumpyoColors.softCharcoal,
-            ),
+                  color: SumpyoColors.softCharcoal,
+                ),
           ),
           const SizedBox(height: 24),
           SizedBox(
@@ -112,9 +112,12 @@ class EmotionChartWidget extends StatelessWidget {
             spacing: 16,
             runSpacing: 8,
             children: [
-              _buildLegendItem(context, StringUtils.keepAll('공감형 (F)'), SumpyoColors.sageGreen.withValues(alpha: 0.8)),
-              _buildLegendItem(context, StringUtils.keepAll('이성형 (T)'), SumpyoColors.muteBlue.withValues(alpha: 0.8)),
-              _buildLegendItem(context, StringUtils.keepAll('온기형 (W)'), SumpyoColors.errorRed.withValues(alpha: 0.6)),
+              _buildLegendItem(context, StringUtils.keepAll('공감형 (F)'),
+                  SumpyoColors.sageGreen.withValues(alpha: 0.8)),
+              _buildLegendItem(context, StringUtils.keepAll('이성형 (T)'),
+                  SumpyoColors.muteBlue.withValues(alpha: 0.8)),
+              _buildLegendItem(context, StringUtils.keepAll('온기형 (W)'),
+                  SumpyoColors.errorRed.withValues(alpha: 0.6)),
             ],
           ),
         ],
@@ -138,8 +141,8 @@ class EmotionChartWidget extends StatelessWidget {
         Text(
           text,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+                fontWeight: FontWeight.w600,
+              ),
         ),
       ],
     );

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../core/utils/vibration_helper.dart';
 
 class BounceTappable extends StatefulWidget {
@@ -17,7 +17,8 @@ class BounceTappable extends StatefulWidget {
   State<BounceTappable> createState() => _BounceTappableState();
 }
 
-class _BounceTappableState extends State<BounceTappable> with SingleTickerProviderStateMixin {
+class _BounceTappableState extends State<BounceTappable>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 

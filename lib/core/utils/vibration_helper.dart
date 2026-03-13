@@ -1,4 +1,4 @@
-﻿import 'package:flutter/services.dart';
+import 'package:flutter/services.dart';
 
 class VibrationHelper {
   /// 매우 가벼운 터치 (버튼 탭, 슬라이더 틱)

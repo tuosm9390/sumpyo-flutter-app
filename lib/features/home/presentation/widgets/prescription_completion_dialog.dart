@@ -65,7 +65,8 @@ class PrescriptionCompletionDialog extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF383838) : const Color(0xFFF8FBF8),
+                color:
+                    isDark ? const Color(0xFF383838) : const Color(0xFFF8FBF8),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: SumpyoColors.sageGreen.withValues(alpha: 0.1),
@@ -91,7 +92,10 @@ class PrescriptionCompletionDialog extends StatelessWidget {
                   ),
                 ],
               ),
-            ).animate().slideY(begin: 0.1, end: 0, delay: 600.ms).fadeIn(delay: 600.ms),
+            )
+                .animate()
+                .slideY(begin: 0.1, end: 0, delay: 600.ms)
+                .fadeIn(delay: 600.ms),
             const SizedBox(height: 32),
             SizedBox(
               width: double.infinity,
@@ -108,7 +112,8 @@ class PrescriptionCompletionDialog extends StatelessWidget {
                 ),
                 child: Text(
                   StringUtils.keepAll('처방전 확인하기'),
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
             ).animate().fadeIn(delay: 800.ms),
@@ -118,4 +123,3 @@ class PrescriptionCompletionDialog extends StatelessWidget {
     ).animate().scale(duration: 300.ms, curve: Curves.easeOutBack);
   }
 }
-

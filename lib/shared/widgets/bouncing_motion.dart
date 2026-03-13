@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class BouncingMotion extends StatefulWidget {
   final Widget child;
@@ -16,7 +16,8 @@ class BouncingMotion extends StatefulWidget {
   State<BouncingMotion> createState() => _BouncingMotionState();
 }
 
-class _BouncingMotionState extends State<BouncingMotion> with SingleTickerProviderStateMixin {
+class _BouncingMotionState extends State<BouncingMotion>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 

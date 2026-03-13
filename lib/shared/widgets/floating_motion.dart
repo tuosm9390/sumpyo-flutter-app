@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class FloatingMotion extends StatefulWidget {
   final Widget child;
@@ -16,7 +16,8 @@ class FloatingMotion extends StatefulWidget {
   State<FloatingMotion> createState() => _FloatingMotionState();
 }
 
-class _FloatingMotionState extends State<FloatingMotion> with SingleTickerProviderStateMixin {
+class _FloatingMotionState extends State<FloatingMotion>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -28,7 +29,8 @@ class _FloatingMotionState extends State<FloatingMotion> with SingleTickerProvid
       duration: widget.duration,
     )..repeat(reverse: true);
 
-    _animation = Tween<double>(begin: -widget.offset, end: widget.offset).animate(
+    _animation =
+        Tween<double>(begin: -widget.offset, end: widget.offset).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine),
     );
   }

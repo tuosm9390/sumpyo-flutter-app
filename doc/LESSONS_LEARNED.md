@@ -62,3 +62,26 @@ Author: Antigravity
 - **교훈**: 문자열을 다루는 자동화 작업에서는 스크립트 언어와 타겟 언어(Dart)의 특수 문자 처리 방식이 충돌하기 쉽다. 코드를 생성할 때는 최대한 단순하고 이스케이프가 필요 없는 문자열 포맷을 설계해야 후속 빌드 에러를 방지할 수 있다.
 - **복합 UI 스크롤 최적화 (Flutter Sliver Patterns)**: 고해상도 차트, 애니메이션 히어로 섹션, 그리고 대량의 리스트가 공존하는 화면에서 `CustomScrollView`와 `Sliver` 패턴은 60/120fps의 부드러운 성능을 보장하는 필수 요소임을 재확인함.
 - **정서적 UX 설계 (Analog Comfort Design)**: 시간대별 동적 인사말(`GreetingUtils`)과 마스코트의 부유 애니메이션(`FloatingMotion`)을 결합함으로써 사용자와 앱 간의 정서적 유대감을 강화하는 '아날로그 위로'의 효과를 극대화함.
+Date: 2026-03-13 10:15:00
+Author: Antigravity
+
+# 코드 품질 및 문제 해결 규칙
+
+## 1. Widget Test에서의 Font와 Hive 처리
+- **문제**: Widget Test 구동 시 `PathProvider`나 `GoogleFonts`가 모킹되지 않아 테스트가 실패하거나 보류(Pending Timer)되는 현상이 발생.
+- **교훈**: `flutter test` 환경은 실제 앱과 다르므로 `TestWidgetsFlutterBinding.ensureInitialized()`를 호출해야 하며, `GoogleFonts.config.allowRuntimeFetching = false`로 폰트 다운로드를 막아야 합니다.
+- **해결책**:
+  ```dart
+  setUpAll(() {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    GoogleFonts.config.allowRuntimeFetching = false;
+  });
+  ```
+
+## 2. 비동기 BuildContext 사용
+- **문제**: 비동기 호출 이후 `if (prescription != null && mounted)`와 같이 작성하면 린터에서 여전히 `use_build_context_synchronously` 경고가 발생합니다.
+- **교훈**: 조건식 안에서 묶어 쓰지 말고, 비동기 호출 직후 즉시 반환하는 가드 문법을 적용해야 컴파일러가 완벽하게 인지합니다.
+- **해결책**: `if (!context.mounted) return;`
+
+## 3. Deprecated API의 보수적 접근
+- **교훈**: 서드파티 패키지 업데이트로 인한 API 변경 시 (예: `Share.shareXFiles` -> `SharePlus.share`), 패키지 내부 버전에 따라 최신 API가 바로 적용되지 않을 수 있습니다. 완벽한 마이그레이션 전략이 확립되기 전까지는 `// ignore: deprecated_member_use`로 안정성을 우선 확보하는 것이 안전합니다.

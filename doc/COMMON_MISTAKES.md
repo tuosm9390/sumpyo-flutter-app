@@ -81,3 +81,11 @@ Author: Antigravity
   1. 데이터를 삽입할 때 스크립트 환경과 타겟 언어(Dart) 간의 이스케이프 충돌을 피하기 위해 작은따옴표(`'`)를 사용하여 이스케이프가 불필요한 형태로 문자열을 구조화하라.
   2. 코드를 수정한 직후에는 반드시 `flutter analyze`를 실행하여 쉘 스크립트 작성 과정에서 발생한 이스케이프 문자 오염이 없는지 즉시 확인하라.
 - **MainLayout 내 중복 AppBar 배치**: `MainLayout`으로 개별 화면을 감싸는 구조에서 각 페이지(예: `PrescriptionsPage`)에 별도의 `AppBar`를 중복 배치하여 시각적 불균형이 발생하는 이슈. 개별 화면에서는 `AppBar`를 제거하고 공통 레이아웃의 앱바를 활용하거나 `SliverAppBar`로 통합하는 설계가 필요함.
+
+## 2026-03-13: 테스트 환경 설정 누락
+- **실수**: `flutter test` 작성 시 `TestWidgetsFlutterBinding.ensureInitialized()` 누락 및 외부 의존성(폰트 다운로드, Hive 경로 등) 모킹 부족.
+- **방지책**: 위젯 테스트 초기화 단계에 폰트 다운로드 비활성화 및 `runAsync`로 Pending Timer 제거 적용.
+
+## 2026-03-13: Deprecated API 적용 관련 오판
+- **실수**: `SharePlus.share` 등 최신 API가 구버전 패키지에서 동작하지 않을 수 있음을 간과하고 일괄 수정하여 빌드/테스트를 깨뜨림.
+- **방지책**: Deprecated 경고 발생 시 공식 문서를 확인하되, 현재 프로젝트에 설치된 패키지 버전에 해당 API가 확실히 구현되어 있는지부터 점검할 것. 안전한 과도기적 방법으로 `// ignore: deprecated_member_use` 주석을 활용.

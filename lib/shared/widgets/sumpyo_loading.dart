@@ -1,11 +1,11 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'bouncing_motion.dart';
 import '../../core/theme/sumpyo_colors.dart';
 
 class SumpyoLoadingIndicator extends StatelessWidget {
   final double size;
-  
+
   const SumpyoLoadingIndicator({
     super.key,
     this.size = 60,
@@ -24,7 +24,10 @@ class SumpyoLoadingIndicator extends StatelessWidget {
               width: size,
               height: size,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -40,15 +43,15 @@ class SumpyoLoadingIndicator extends StatelessWidget {
           Text(
             "마음을 달래는 약을 짓는 중...",
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: SumpyoColors.softCharcoal.withValues(alpha: 0.6),
-            ),
-          ).animate(onPlay: (controller) => controller.repeat())
-           .fade(duration: 1.seconds)
-           .then()
-           .fade(begin: 1, end: 0, duration: 1.seconds),
+                  color: SumpyoColors.softCharcoal.withValues(alpha: 0.6),
+                ),
+          )
+              .animate(onPlay: (controller) => controller.repeat())
+              .fade(duration: 1.seconds)
+              .then()
+              .fade(begin: 1, end: 0, duration: 1.seconds),
         ],
       ),
     );
   }
 }
-

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'bounce_tappable.dart';
 
 class SumpyoButton extends StatelessWidget {
@@ -18,7 +18,7 @@ class SumpyoButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     Widget content = AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -29,13 +29,15 @@ class SumpyoButton extends StatelessWidget {
           color: theme.colorScheme.primary,
           width: 1.5,
         ),
-        boxShadow: isSecondary ? [] : [
-          BoxShadow(
-            color: theme.colorScheme.primary.withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          )
-        ],
+        boxShadow: isSecondary
+            ? []
+            : [
+                BoxShadow(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                )
+              ],
       ),
       child: Center(
         child: isLoading
@@ -67,5 +69,3 @@ class SumpyoButton extends StatelessWidget {
     );
   }
 }
-
-

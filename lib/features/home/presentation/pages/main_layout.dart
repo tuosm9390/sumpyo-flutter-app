@@ -45,8 +45,10 @@ class _MainLayoutState extends State<MainLayout> {
               backgroundColor: Colors.transparent,
               currentIndex: _currentIndex,
               selectedItemColor: SumpyoColors.sageGreen,
-              unselectedItemColor: SumpyoColors.softCharcoal.withValues(alpha: 0.4),
-              selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Pretendard'),
+              unselectedItemColor:
+                  SumpyoColors.softCharcoal.withValues(alpha: 0.4),
+              selectedLabelStyle: const TextStyle(
+                  fontWeight: FontWeight.bold, fontFamily: 'Pretendard'),
               unselectedLabelStyle: const TextStyle(fontFamily: 'Pretendard'),
               onTap: (index) {
                 HapticFeedback.selectionClick();

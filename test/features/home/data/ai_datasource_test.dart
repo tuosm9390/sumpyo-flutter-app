@@ -1,4 +1,4 @@
-﻿import "dart:convert";
+import "dart:convert";
 import "package:flutter_test/flutter_test.dart";
 import "package:mocktail/mocktail.dart";
 import "package:google_generative_ai/google_generative_ai.dart";
@@ -6,8 +6,14 @@ import "package:sumpyo_app/features/home/data/datasources/ai_remote_datasource.d
 
 // We don't use 'implements' because GenerativeModel and GenerateContentResponse are final classes.
 // Instead, we use dynamic in AIRemoteDataSource to allow these mocks to be used.
-class MockGenerativeModel extends Mock {}
-class MockGenerateContentResponse extends Mock {}
+class MockGenerativeModel extends Mock {
+  Future<dynamic> generateContent(Iterable<dynamic> prompt) =>
+      super.noSuchMethod(Invocation.method(#generateContent, [prompt]));
+}
+
+class MockGenerateContentResponse extends Mock {
+  String? get text => super.noSuchMethod(Invocation.getter(#text));
+}
 
 void main() {
   late AIRemoteDataSource dataSource;
@@ -33,7 +39,8 @@ void main() {
       "quote": "가장 어두운 밤도 결국 아침을 맞이합니다."
     };
 
-    test("generatePrescription returns expected JSON data when successful", () async {
+    test("generatePrescription returns expected JSON data when successful",
+        () async {
       // arrange
       when(() => mockResponse.text).thenReturn(jsonEncode(tPrescriptionMap));
       when(() => mockModel.generateContent(any()))
@@ -53,7 +60,8 @@ void main() {
       verify(() => mockModel.generateContent(any())).called(1);
     });
 
-    test("generatePrescription handles markdown JSON formatting in response", () async {
+    test("generatePrescription handles markdown JSON formatting in response",
+        () async {
       // arrange
       final markdownJson = "```json\n${jsonEncode(tPrescriptionMap)}\n```";
       when(() => mockResponse.text).thenReturn(markdownJson);
@@ -70,7 +78,8 @@ void main() {
       expect(result, tPrescriptionMap);
     });
 
-    test("generatePrescription returns fallback when AI returns empty response", () async {
+    test("generatePrescription returns fallback when AI returns empty response",
+        () async {
       // arrange
       when(() => mockResponse.text).thenReturn(null);
       when(() => mockModel.generateContent(any()))
@@ -88,7 +97,9 @@ void main() {
       expect(result["quote"], contains("충분히 잘 해내고"));
     });
 
-    test("generatePrescription returns fallback when exception occurs during generation", () async {
+    test(
+        "generatePrescription returns fallback when exception occurs during generation",
+        () async {
       // arrange
       when(() => mockModel.generateContent(any()))
           .thenThrow(Exception("Network error"));
@@ -105,7 +116,7 @@ void main() {
 
     test("handles all styles correctly without crashing", () async {
       final styles = ["F", "T", "W", "INVALID"];
-      
+
       for (final style in styles) {
         // arrange
         when(() => mockResponse.text).thenReturn(jsonEncode(tPrescriptionMap));

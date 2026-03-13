@@ -11,12 +11,14 @@ class PrescriptionNotifier extends _$PrescriptionNotifier {
     return ref.watch(prescriptionRepositoryProvider).getPrescriptions();
   }
 
-  Future<Prescription?> generatePrescription(String prompt, String style) async {
+  Future<Prescription?> generatePrescription(
+      String prompt, String style) async {
     final repository = ref.read(prescriptionRepositoryProvider);
     state = const AsyncValue.loading();
-    
+
     try {
-      final newPrescription = await repository.generatePrescription(prompt, style);
+      final newPrescription =
+          await repository.generatePrescription(prompt, style);
       final prescriptions = await repository.getPrescriptions();
       state = AsyncValue.data(prescriptions);
       return newPrescription;
@@ -26,4 +28,3 @@ class PrescriptionNotifier extends _$PrescriptionNotifier {
     }
   }
 }
-

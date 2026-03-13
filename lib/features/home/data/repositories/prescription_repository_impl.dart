@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/prescription.dart';
+import '../../domain/entities/prescription.dart';
 import '../../domain/repositories/prescription_repository.dart';
 import '../datasources/ai_remote_datasource.dart';
 import '../datasources/prescription_local_datasource.dart';
@@ -14,7 +14,8 @@ class PrescriptionRepositoryImpl implements PrescriptionRepository {
   });
 
   @override
-  Future<Prescription> generatePrescription(String emotion, String style) async {
+  Future<Prescription> generatePrescription(
+      String emotion, String style) async {
     // 1. API 호출
     final aiResponse = await remoteDataSource.generatePrescription(
       emotion: emotion,

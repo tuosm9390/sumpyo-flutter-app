@@ -27,7 +27,10 @@ class WellnessNotifier extends _$WellnessNotifier {
         if (content.isNotEmpty) {
           final List<dynamic> jsonList = json.decode(content);
           if (jsonList.isNotEmpty) {
-            state = jsonList.map((json) => WellnessMission.fromJson(json as Map<String, dynamic>)).toList();
+            state = jsonList
+                .map((json) =>
+                    WellnessMission.fromJson(json as Map<String, dynamic>))
+                .toList();
             return;
           }
         }

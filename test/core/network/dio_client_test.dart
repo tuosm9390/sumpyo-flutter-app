@@ -7,7 +7,7 @@ void main() {
   test('dio provider returns a Dio instance', () {
     final container = ProviderContainer();
     final dio = container.read(dioProvider);
-    
+
     expect(dio, isA<Dio>());
     expect(dio.options.connectTimeout, const Duration(seconds: 5));
   });

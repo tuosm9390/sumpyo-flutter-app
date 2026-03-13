@@ -32,9 +32,13 @@ class HeroSection extends StatelessWidget {
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           height: 1.4,
-                          color: isDark ? Colors.white : SumpyoColors.softCharcoal,
+                          color:
+                              isDark ? Colors.white : SumpyoColors.softCharcoal,
                         ),
-                      ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.1, end: 0),
+                      )
+                          .animate()
+                          .fadeIn(duration: 800.ms)
+                          .slideY(begin: 0.1, end: 0),
                       const SizedBox(height: 12),
                       Text(
                         GreetingUtils.getSubGreeting(),
@@ -54,9 +58,15 @@ class HeroSection extends StatelessWidget {
                   width: 64,
                   height: 64,
                 )
-                .animate(onPlay: (controller) => controller.repeat(reverse: true))
-                .moveY(begin: 0, end: -12, duration: 1500.ms, curve: Curves.easeInOutSine)
-                .fadeIn(duration: 1000.ms),
+                    .animate(
+                        onPlay: (controller) =>
+                            controller.repeat(reverse: true))
+                    .moveY(
+                        begin: 0,
+                        end: -12,
+                        duration: 1500.ms,
+                        curve: Curves.easeInOutSine)
+                    .fadeIn(duration: 1000.ms),
               ],
             ),
           ],

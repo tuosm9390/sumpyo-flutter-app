@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../core/theme/sumpyo_colors.dart';
 import 'bounce_tappable.dart';
 
@@ -17,7 +17,7 @@ class SumpyoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     Widget cardContent = Container(
       padding: padding,
       decoration: BoxDecoration(

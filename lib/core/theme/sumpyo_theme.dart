@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'sumpyo_colors.dart';
 
@@ -120,15 +120,24 @@ class SumpyoTheme {
 
   static TextTheme _buildTextTheme(Color textColor) {
     return TextTheme(
-      displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: textColor),
-      displayMedium: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: textColor),
-      displaySmall: TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: textColor),
-      headlineMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: textColor),
-      titleLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: textColor),
-      bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: textColor),
-      bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: textColor),
-      labelLarge: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: textColor),
-      bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: textColor),
+      displayLarge: TextStyle(
+          fontSize: 32, fontWeight: FontWeight.bold, color: textColor),
+      displayMedium: TextStyle(
+          fontSize: 28, fontWeight: FontWeight.bold, color: textColor),
+      displaySmall: TextStyle(
+          fontSize: 24, fontWeight: FontWeight.w600, color: textColor),
+      headlineMedium: TextStyle(
+          fontSize: 20, fontWeight: FontWeight.w600, color: textColor),
+      titleLarge: TextStyle(
+          fontSize: 18, fontWeight: FontWeight.w600, color: textColor),
+      bodyLarge: TextStyle(
+          fontSize: 16, fontWeight: FontWeight.normal, color: textColor),
+      bodyMedium: TextStyle(
+          fontSize: 14, fontWeight: FontWeight.normal, color: textColor),
+      labelLarge: TextStyle(
+          fontSize: 14, fontWeight: FontWeight.w500, color: textColor),
+      bodySmall: TextStyle(
+          fontSize: 12, fontWeight: FontWeight.normal, color: textColor),
     );
   }
 

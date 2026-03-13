@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
@@ -25,7 +25,7 @@ class _IntroPageState extends State<IntroPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: Center(
@@ -39,14 +39,10 @@ class _IntroPageState extends State<IntroPage> {
                 width: 180,
                 height: 180,
               ),
-            )
-            .animate()
-            .fadeIn(duration: 800.ms)
-            .scale(
-              begin: const Offset(0.8, 0.8), 
-              end: const Offset(1.0, 1.0), 
-              curve: Curves.easeOutBack
-            ),
+            ).animate().fadeIn(duration: 800.ms).scale(
+                begin: const Offset(0.8, 0.8),
+                end: const Offset(1.0, 1.0),
+                curve: Curves.easeOutBack),
             const SizedBox(height: 32),
             Text(
               '마음의 쉼표, 숨표 AI',
@@ -56,13 +52,9 @@ class _IntroPageState extends State<IntroPage> {
                 color: theme.colorScheme.onSurface,
               ),
             )
-            .animate()
-            .fadeIn(delay: 400.ms, duration: 800.ms)
-            .slideY(
-              begin: 0.2, 
-              end: 0, 
-              curve: Curves.easeOutBack
-            ),
+                .animate()
+                .fadeIn(delay: 400.ms, duration: 800.ms)
+                .slideY(begin: 0.2, end: 0, curve: Curves.easeOutBack),
           ],
         ),
       ),

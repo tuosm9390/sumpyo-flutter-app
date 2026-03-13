@@ -48,14 +48,19 @@ class PrescriptionsPage extends ConsumerWidget {
                             Icon(
                               Icons.receipt_long_outlined,
                               size: 64,
-                              color: SumpyoColors.softCharcoal.withValues(alpha: 0.2),
+                              color: SumpyoColors.softCharcoal
+                                  .withValues(alpha: 0.2),
                             ),
                             const SizedBox(height: 16),
                             Text(
                               StringUtils.keepAll('아직 조제된 처방전이 없습니다.'),
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                color: SumpyoColors.softCharcoal.withValues(alpha: 0.5),
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    color: SumpyoColors.softCharcoal
+                                        .withValues(alpha: 0.5),
+                                  ),
                             ),
                           ],
                         ),
@@ -65,7 +70,9 @@ class PrescriptionsPage extends ConsumerWidget {
                 );
               }
 
-              final models = prescriptions.map((e) => PrescriptionModel.fromEntity(e)).toList();
+              final models = prescriptions
+                  .map((e) => PrescriptionModel.fromEntity(e))
+                  .toList();
 
               return CustomScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -73,19 +80,22 @@ class PrescriptionsPage extends ConsumerWidget {
                   const SumpyoAppBar(),
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 24, left: 24, right: 24, bottom: 16),
+                      padding: const EdgeInsets.only(
+                          top: 24, left: 24, right: 24, bottom: 16),
                       child: EmotionChartWidget(prescriptions: models)
-                        .animate()
-                        .fadeIn(duration: 600.ms)
-                        .slideY(begin: 0.1, end: 0),
+                          .animate()
+                          .fadeIn(duration: 600.ms)
+                          .slideY(begin: 0.1, end: 0),
                     ),
                   ),
                   SliverPadding(
-                    padding: const EdgeInsets.only(left: 24, right: 24, bottom: 100),
+                    padding:
+                        const EdgeInsets.only(left: 24, right: 24, bottom: 100),
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          final p = prescriptions[prescriptions.length - 1 - index];
+                          final p =
+                              prescriptions[prescriptions.length - 1 - index];
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: SumpyoCard(
@@ -97,17 +107,26 @@ class PrescriptionsPage extends ConsumerWidget {
                                 children: [
                                   Center(
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 6),
                                       decoration: BoxDecoration(
-                                        color: SumpyoColors.sageGreen.withValues(alpha: 0.1),
+                                        color: SumpyoColors.sageGreen
+                                            .withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Text(
-                                        StringUtils.keepAll(p.style == 'F' ? '공감 위로' : (p.style == 'T' ? '이성 조언' : '따뜻한 온기')),  
-                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          color: SumpyoColors.sageGreen,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        StringUtils.keepAll(p.style == 'F'
+                                            ? '공감 위로'
+                                            : (p.style == 'T'
+                                                ? '이성 조언'
+                                                : '따뜻한 온기')),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              color: SumpyoColors.sageGreen,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                       ),
                                     ),
                                   ),
@@ -115,7 +134,10 @@ class PrescriptionsPage extends ConsumerWidget {
                                   Text(
                                     StringUtils.keepAll(p.title),
                                     textAlign: TextAlign.center,
-                                    style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 20),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall
+                                        ?.copyWith(fontSize: 20),
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
@@ -123,14 +145,19 @@ class PrescriptionsPage extends ConsumerWidget {
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.nanumPenScript(
                                       fontSize: 18,
-                                      color: SumpyoColors.softCharcoal.withValues(alpha: 0.8),
+                                      color: SumpyoColors.softCharcoal
+                                          .withValues(alpha: 0.8),
                                     ),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),
-                            ).animate().fadeIn(duration: 400.ms, delay: (index * 50).ms).slideX(begin: 0.1, end: 0),      
+                            )
+                                .animate()
+                                .fadeIn(
+                                    duration: 400.ms, delay: (index * 50).ms)
+                                .slideX(begin: 0.1, end: 0),
                           );
                         },
                         childCount: prescriptions.length,
@@ -167,17 +194,20 @@ class PrescriptionsPage extends ConsumerWidget {
 
     Future<String?> captureImage() async {
       try {
-        final boundary = boundaryKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+        final boundary = boundaryKey.currentContext?.findRenderObject()
+            as RenderRepaintBoundary?;
         if (boundary == null) return null;
 
         final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-        final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+        final ByteData? byteData =
+            await image.toByteData(format: ui.ImageByteFormat.png);
         if (byteData == null) return null;
 
         final Uint8List pngBytes = byteData.buffer.asUint8List();
 
         final directory = await getTemporaryDirectory();
-        final String fileName = 'sumpyo_prescription_${DateTime.now().millisecondsSinceEpoch}.png';
+        final String fileName =
+            'sumpyo_prescription_${DateTime.now().millisecondsSinceEpoch}.png';
         final File imageFile = File('${directory.path}/$fileName');
         await imageFile.writeAsBytes(pngBytes);
         return imageFile.path;
@@ -262,7 +292,8 @@ class PrescriptionsPage extends ConsumerWidget {
                           width: double.infinity,
                           padding: const EdgeInsets.all(28),
                           decoration: BoxDecoration(
-                            color: SumpyoColors.muteBlue.withValues(alpha: 0.15),
+                            color:
+                                SumpyoColors.muteBlue.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(24),
                           ),
                           child: Text(
@@ -272,7 +303,8 @@ class PrescriptionsPage extends ConsumerWidget {
                             style: GoogleFonts.nanumPenScript(
                               fontSize: 24,
                               height: 1.4,
-                              color: SumpyoColors.softCharcoal.withValues(alpha: 0.9),
+                              color: SumpyoColors.softCharcoal
+                                  .withValues(alpha: 0.9),
                             ),
                           ),
                         ),
@@ -281,31 +313,36 @@ class PrescriptionsPage extends ConsumerWidget {
                           StringUtils.keepAll(formattedContent),
                           softWrap: true,
                           textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            height: 1.8,
-                            letterSpacing: 0.2,
-                            color: SumpyoColors.softCharcoal,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    height: 1.8,
+                                    letterSpacing: 0.2,
+                                    color: SumpyoColors.softCharcoal,
+                                  ),
                         ),
                         const SizedBox(height: 48),
                         const Divider(height: 1, thickness: 0.5),
                         const SizedBox(height: 24),
                         Text(
                           StringUtils.keepAll('내가 들려준 이야기'),
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: SumpyoColors.softCharcoal.withValues(alpha: 0.5),
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: SumpyoColors.softCharcoal
+                                        .withValues(alpha: 0.5),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           StringUtils.keepAll(p.emotion),
                           softWrap: true,
                           textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: SumpyoColors.softCharcoal.withValues(alpha: 0.6),
-                            height: 1.6,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: SumpyoColors.softCharcoal
+                                        .withValues(alpha: 0.6),
+                                    height: 1.6,
+                                  ),
                         ),
                         const SizedBox(height: 40),
                       ],
@@ -339,7 +376,8 @@ class PrescriptionsPage extends ConsumerWidget {
     );
   }
 
-  void _showSharePreview(BuildContext context, String imagePath, Prescription p) {
+  void _showSharePreview(
+      BuildContext context, String imagePath, Prescription p) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -364,9 +402,9 @@ class PrescriptionsPage extends ConsumerWidget {
               Text(
                 StringUtils.keepAll('이미지 미리보기'),
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: SumpyoColors.softCharcoal,
-                ),
+                      fontWeight: FontWeight.bold,
+                      color: SumpyoColors.softCharcoal,
+                    ),
               ),
               const SizedBox(height: 24),
               ConstrainedBox(
@@ -385,6 +423,7 @@ class PrescriptionsPage extends ConsumerWidget {
               SumpyoButton(
                 text: StringUtils.keepAll('공유하기'),
                 onPressed: () async {
+                  // ignore: deprecated_member_use
                   await Share.shareXFiles(
                     [XFile(imagePath)],
                     text: '숨표 AI가 전하는 따뜻한 처방전: ${p.title}',
